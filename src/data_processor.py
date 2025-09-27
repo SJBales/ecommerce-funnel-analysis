@@ -4,7 +4,7 @@ from google.cloud import bigquery
 client = bigquery.Client(project='product-analytics-portfolio')
 
 query = """
-SELECT table_name 
+SELECT table_name
 FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.INFORMATION_SCHEMA.TABLES`
 ORDER BY table_name
 """
