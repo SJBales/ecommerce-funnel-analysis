@@ -31,12 +31,25 @@ High-level understanding of customer conversion:
 
 # Technical Approach
 
+## Files for real-time automation and reproducability
+- data_loader.py --> file that loads using SQL queries. SQL queries manage pre-proessing
+- data_processor.py --> script for creating the data processor class that implements deeper analyses on demand, like customer segmentation and cohorts
+- visualization_engine.py --> script with project-specific class for custom data visualizations
+- tests.py --> unit tests to ensure classes are working properly
+
+## Markdown files for inital presentation to stakeholders
+- Funnel_Analysis_Results.ipynb --> Markdown for using the above classes to generate shareable report with stakeholders
+
 # Repository Structure
 
-| notebooks/
+|-notebooks/
 |----dataset_exploration.ipynb
 |----workshop.ipynb
-| src/
+|----Funnel_Analysis_Results.ipynb
+|-src/
 |----data_loader.py
+|----data_processor.py
+|----visualization_engine.py
+|----tests.py
 
 # How to Reproduce
