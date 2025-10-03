@@ -56,7 +56,7 @@ def ecommerce_loader(return_dict=False):
 
     # SQL statement
     session_sql = """-- CTE to stack relevant columns from two date tables
-    -- Needs to be compressed to query across all tables with a wildcard for prod
+    -- Needs to be compressed to query across all tables for prod
     WITH stacked_table AS (SELECT DISTINCT user_pseudo_id,
         event_date,
         event_timestamp,
@@ -64,7 +64,10 @@ def ecommerce_loader(return_dict=False):
         event_name
     FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210130`,
         UNNEST(event_params) AS events
-    WHERE event_name IN ('page_view', 'add_to_cart', 'begin_checkout', 'purchase') AND
+    WHERE event_name IN ('page_view',
+                         'add_to_cart',
+                         'begin_checkout',
+                         'purchase') AND
         events.key = 'ga_session_id'
     UNION ALL
     SELECT DISTINCT user_pseudo_id,
@@ -74,7 +77,10 @@ def ecommerce_loader(return_dict=False):
         event_name
     FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210130`,
         UNNEST(event_params) AS events
-    WHERE event_name IN ('page_view', 'add_to_cart', 'begin_checkout', 'purchase') AND
+    WHERE event_name IN ('page_view',
+                         'add_to_cart',
+                         'begin_checkout',
+                         'purchase') AND
         events.key = 'ga_session_id'),
 
     -- CTE to create flagged events by user and session
@@ -144,6 +150,7 @@ def ecommerce_loader(return_dict=False):
                 'geo_query': geo_query}
     else:
         return event_query, session_query, device_query, geo_query
+
 
 if __name__ == "__main__":
     events, session, device, geo = ecommerce_loader()
