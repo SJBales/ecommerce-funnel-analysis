@@ -16,10 +16,7 @@ class ecommerce_processor:
 
     # Method for running the queries and storing the results
     def run_queries(self) -> None:
-        self.event_df,
-        self.session_df,
-        self.device_df,
-        self.geo_df = ecommerce_loader()
+        self.event_df, self.session_df, self.device_df, self.geo_df = ecommerce_loader()
 
     # Method to pivot the event data from wide to long
     def prep_events(self) -> None:
