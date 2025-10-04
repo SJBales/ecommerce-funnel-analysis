@@ -25,7 +25,8 @@ High-level understanding of customer conversion:
 
 ## Next Steps
 - Need to test data quality of junk sessions (i.e. that lasted very short time, likely less than 5 seconds)
-- Plan the structure of the pipeline (scripts, classes, outputs, etc.)
+- Test all newly created methods and functions
+- Start cohort and user segmentation work
 
 # Key Findings
 

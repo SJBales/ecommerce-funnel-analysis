@@ -1,4 +1,4 @@
-from data_loader import ecommerce_loader
+from src.data_loader import ecommerce_loader
 import logging
 
 logging.basicConfig(level=logging.INFO)
