@@ -24,9 +24,9 @@ High-level understanding of customer conversion:
     d. Does the length of a session affect conversion rates?
 
 ## Next Steps
-- Need to test data quality of junk sessions (i.e. that lasted very short time, likely less than 5 seconds)
-- Test all newly created methods and functions
-- Start cohort and user segmentation work
+- Create unit tests for all newly created classes and methods
+- Test data quality of junk sessions (i.e. that lasted very short time, likely less than 5 seconds)
+- Start cohort and user segmentation work (use clustering)
 
 # Key Findings
 
