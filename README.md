@@ -24,9 +24,9 @@ High-level understanding of customer conversion:
     d. Does the length of a session affect conversion rates?
 
 ## Next Steps
-- Create unit tests for all newly created classes and methods
+- Expand unit tests to other classes and methods
+- Expand segmentation analysis to use clustering
 - Test data quality of junk sessions (i.e. that lasted very short time, likely less than 5 seconds)
-- Start cohort and user segmentation work (use clustering)
 
 # Key Findings
 
@@ -36,6 +36,7 @@ High-level understanding of customer conversion:
 - data_loader.py --> file that loads using SQL queries. SQL queries manage pre-proessing
 - data_processor.py --> script for creating the data processor class that implements deeper analyses on demand, like customer segmentation and cohorts
 - visualization_engine.py --> script with project-specific class for custom data visualizations
+- segmentation.py --> script to implement class for customer segmentation analyses
 - tests.py --> unit tests to ensure classes are working properly
 
 ## Markdown files for inital presentation to stakeholders
