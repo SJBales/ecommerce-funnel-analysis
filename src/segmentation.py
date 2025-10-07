@@ -14,6 +14,7 @@ class customerSegmentation:
     def __init__(self, processor):
         self.processor = processor
         self.customer_df = None
+        self.cluster_df = None
 
     def prep_segment_data(self) -> None:
         '''Creates dataframe for segmentation'''
@@ -61,6 +62,10 @@ class customerSegmentation:
 
         self.customer_df['week'] = self.customer_df['first_event_date']\
             .apply(lambda x: ((x - min_date).days // 7) + 1)
+
+    def prep_clustering_data(self, cols=['']):
+        '''Method for preparing data for clustering to id segments'''
+        pass
 
 
 if __name__ == "__main__":
