@@ -2,6 +2,7 @@ import logging
 import pandas as pd
 from src.data_processor import ecommerceProcessor
 from functools import reduce
+from sklearn.cluster import KMeans
 
 # Setting up a logger
 logging.basicConfig(level=logging.INFO)
@@ -52,6 +53,7 @@ class customerSegmentation:
 
         logger.info("Successfully prepped customer dataframe")
 
+    # Getting time-based cohorts
     def get_time_cohorts(self):
         '''Preps data and does conversions needed for time cohorts'''
 
@@ -63,12 +65,44 @@ class customerSegmentation:
         self.customer_df['week'] = self.customer_df['first_event_date']\
             .apply(lambda x: ((x - min_date).days // 7) + 1)
 
-    def prep_clustering_data(self, cols=['']):
+    # Prepating data for clustering
+    def prep_clustering_data(self, cols=['user_pseudo_id',
+                                         'first_event_date',
+                                         'country',
+                                         'region']):
         '''Method for preparing data for clustering to id segments'''
-        pass
+
+        if self.customer_df is None:
+            self.prep_segment_data()
+            logger.info('No customer DF, prepping for clustering')
+
+        clust_backbone = self.customer_df.loc[:, cols]
+
+        # Only selecting countries that appear a fixed number of times
+        country_counts = clust_backbone['country'].value_counts()
+        clust_backbone['country_map'] = clust_backbone['country']\
+            .apply(lambda x: x if country_counts[x] > 50 else 'other')
+
+        # Only selecting regions that appear a fixed number of times
+        region_counts = clust_backbone['region'].value_counts()
+        clust_backbone['region_map'] = clust_backbone['region']\
+            .apply(lambda x: x if region_counts[x] > 50 else 'other')
+
+        # Selecting final columns and creating dummies
+        self.cluster_df = pd.get_dummies(clust_backbone,
+                                         columns=['first_event_date',
+                                                  'country_map',
+                                                  'region_map'])
+        logger.info('Successfully prepped segmentation data')
+
+    def create_kmeans(self, centers=10):
+        '''Method to identify customer segments using kmeans clustering'''
+
+        k_means = KMeans(n_clusters=centers)
+        self.customer_df['kmeans_cluster'] = k_means.fit_predict(self.cluster_df)
 
 
 if __name__ == "__main__":
     segments = customerSegmentation(ecommerceProcessor())
     segments.prep_segment_data()
-    print(segments.customer_df.head())
+    segments.prep_clustering_data()
