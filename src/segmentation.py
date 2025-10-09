@@ -89,7 +89,14 @@ class customerSegmentation:
             .apply(lambda x: x if region_counts[x] > 50 else 'other')
 
         # Selecting final columns and creating dummies
-        self.cluster_df = pd.get_dummies(clust_backbone,
+        selected_cluster = clust_backbone.loc[:, ['user_pseudo_id',
+                                                  'first_event_date',
+                                                  'country_map',
+                                                  'region_map']]\
+            .set_index('user_pseudo_id')
+
+        self.cluster_df = pd.get_dummies(selected_cluster,
+                                         dtype=int,
                                          columns=['first_event_date',
                                                   'country_map',
                                                   'region_map'])
@@ -99,7 +106,8 @@ class customerSegmentation:
         '''Method to identify customer segments using kmeans clustering'''
 
         k_means = KMeans(n_clusters=centers)
-        self.customer_df['kmeans_cluster'] = k_means.fit_predict(self.cluster_df)
+        self.customer_df['kmeans_cluster'] = k_means\
+            .fit_predict(self.cluster_df)
 
 
 if __name__ == "__main__":

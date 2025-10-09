@@ -12,7 +12,7 @@ class ecommerceViz:
     def remove_pageview_(self, df, remove_pageview=False) -> np.array:
 
         if remove_pageview:
-            mask = df['event'] != 'viewed_page'
+            mask = df['event'] != 'Viewed Page'
         else:
             mask = np.array([True] * df.shape[0])
 
@@ -45,7 +45,7 @@ class ecommerceViz:
 
         # Using the helper method
         sns.set_theme()
-        sns.lineplot(data=self.processor.long_event[row_mask],
+        sns.lineplot(data=self.processor.long_event_df[row_mask],
                      x='first_event_date',
                      y='occurence',
                      hue='event')
@@ -67,7 +67,7 @@ class ecommerceViz:
                      y='occurence',
                      hue='event')
         plt.title('Aggregate Event Conversion Over Time')
-        plt.ylabel('Conversion Rate')
+        plt.ylabel('Conversion Events')
         plt.xlabel('Event Date')
         plt.show()
 
