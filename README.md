@@ -55,3 +55,8 @@ High-level understanding of customer conversion:
 |----tests.py
 
 # How to Reproduce
+
+Install all required packages in the requirements.txt file.
+Run all code chunks in the "final_output.ipynb" file.
+
+If you encounter problems with with the final_output.ipynb file, change your settings for the default jupyter directory in VS code settings.

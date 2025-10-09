@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-class ecommerce_viz:
+class ecommerceViz:
     def __init__(self, processor):
         self.processor = processor
 
@@ -14,7 +14,7 @@ class ecommerce_viz:
         if remove_pageview:
             mask = df['event'] != 'viewed_page'
         else:
-            mask = True
+            mask = np.array([True] * df.shape[0])
 
         return mask
 
@@ -23,14 +23,14 @@ class ecommerce_viz:
     def plot_conversion_rate(self, remove_pageview=False) -> None:
 
         # Calling the helper method for removing the pageview event
-        row_mask = self.remove_pageview_(self.processor.long_events_df,
+        row_mask = self.remove_pageview_(self.processor.long_event_df,
                                          remove_pageview)
 
         # Creating plots
         sns.set_theme()
         sns.barplot(x='event',
                     y='occurence',
-                    data=self.processor.long_events_df[row_mask])
+                    data=self.processor.long_event_df[row_mask])
         plt.title('Event Conversion Rates')
         plt.ylabel('Conversion Rate')
         plt.xlabel('Event')
@@ -40,12 +40,12 @@ class ecommerce_viz:
     def plot_conversion_rates_over_time(self, remove_pageview=False) -> None:
 
         # Calling the helper method for removing the pageview event
-        row_mask = self.remove_pageview_(self.processor.long_events,
+        row_mask = self.remove_pageview_(self.processor.long_event_df,
                                          remove_pageview)
 
         # Using the helper method
         sns.set_theme()
-        sns.lineplot(data=self.processor.long_events[row_mask],
+        sns.lineplot(data=self.processor.long_event[row_mask],
                      x='first_event_date',
                      y='occurence',
                      hue='event')
@@ -58,11 +58,11 @@ class ecommerce_viz:
     def plot_conversion_events_over_time(self, remove_pageview=False) -> None:
 
         # Calling the helper method for removing the pageview event
-        row_mask = self.remove_pageview_(self.processor.agg_long_events_df,
+        row_mask = self.remove_pageview_(self.processor.agg_long_event_df,
                                          remove_pageview)
 
         sns.set_theme()
-        sns.lineplot(data=self.processor.agg_long_events_df[row_mask],
+        sns.lineplot(data=self.processor.agg_long_event_df[row_mask],
                      x='first_event_date',
                      y='occurence',
                      hue='event')
