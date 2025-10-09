@@ -9,6 +9,12 @@ Analysis Objectives:
 
 Business Objective: identify steps in the ecommerce funnel for the product teams to focus on to increase conversion, and highlight any key user segments to focus on for potential product optimization or marketing campaigns.
 
+# Key Findings
+
+- Over half of customers drop off between adding to cart and purchase. This suggests possible issues with the checkout process and is worth further investigation
+- A large spike in traffic in the December timeframe suggests a sales strategy. For product specifically, it appears conversion rates in key steps dropping during this time. It's likely the new traffic was net-new users of the sites, and the drops in user conversion may suggest new users struggle with navigating the site
+- There is a data anomaly for the first few weeks of the collection period where total page views is less than total purchases. This warrants follow up with the team that implemented the tracking for more background on the collection process
+
 # Analysis Plan (To be deleted later)
 
 ## Planned Analyses
@@ -27,8 +33,6 @@ High-level understanding of customer conversion:
 - Expand unit tests to other classes and methods
 - Expand segmentation analysis to use clustering
 - Test data quality of junk sessions (i.e. that lasted very short time, likely less than 5 seconds)
-
-# Key Findings
 
 # Technical Approach
 
