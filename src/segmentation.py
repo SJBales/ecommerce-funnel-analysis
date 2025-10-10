@@ -16,6 +16,7 @@ class customerSegmentation:
         self.processor = processor
         self.customer_df = None
         self.cluster_df = None
+        self._kmeans_created_ = False
 
     def prep_segment_data(self) -> None:
         '''Creates dataframe for segmentation'''
@@ -102,12 +103,30 @@ class customerSegmentation:
                                                   'region_map'])
         logger.info('Successfully prepped segmentation data')
 
+    # K-Means clustering
     def create_kmeans(self, centers=10):
         '''Method to identify customer segments using kmeans clustering'''
 
         k_means = KMeans(n_clusters=centers)
         self.customer_df['kmeans_cluster'] = k_means\
             .fit_predict(self.cluster_df)
+
+        self._kmeans_created_ = True
+
+    # Method for adding clusters to the customer dataframe
+    def add_customer_segments(self):
+        '''Method that adds customer segments to specified dataframes'''
+
+        if self._kmeans_created_:
+            self.processor.long_event_df = pd.merge(
+                    self.processor.long_event_df.copy(),
+                    self.customer_df.loc[:, ['user_pseudo_id',
+                                             'kmeans_cluster']],
+                    on='user_pseudo_id',
+                    how='left')
+            logger.info("Added segments to long events table")
+        else:
+            raise Exception('K-Means workflow must be completed first')
 
 
 if __name__ == "__main__":

@@ -17,6 +17,7 @@ class ecommerceProcessor:
         self.long_session_df = None
         self.agg_long_event_df = None
         self._long_event_initialized = False
+        self._created_segments = False
 
     # Method for running the queries and storing the results
     def run_queries(self, test_=True) -> None:
@@ -90,7 +91,6 @@ class ecommerceProcessor:
             .groupby(['first_event_date', 'event']).sum().reset_index()
 
         logger.info("Aggregated events")
-
 
 if __name__ == "__main__":
     processor = ecommerceProcessor()
