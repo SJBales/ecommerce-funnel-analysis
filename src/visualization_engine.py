@@ -20,21 +20,39 @@ class ecommerceViz:
 
     '''Section for overall event conversion'''
     # Method to plot conversion rates
-    def plot_conversion_rate(self, remove_pageview=False) -> None:
+    def plot_conversion_rate(self,
+                             remove_pageview=False,
+                             plot_segments=False) -> None:
 
         # Calling the helper method for removing the pageview event
         row_mask = self.remove_pageview_(self.processor.long_event_df,
                                          remove_pageview)
 
-        # Creating plots
-        sns.set_theme()
-        sns.barplot(x='event',
-                    y='occurence',
-                    data=self.processor.long_event_df[row_mask])
-        plt.title('Event Conversion Rates')
-        plt.ylabel('Conversion Rate')
-        plt.xlabel('Event')
-        plt.show()
+        # Adding logic for dynamic plotting of customer segments
+        if plot_segments:
+            if not self.processor.created_segments:
+                raise ValueError("No segments in long dataframe")
+
+            grid = sns.FacetGrid(data=self.processor.long_event_df[row_mask],
+                                 col='kmeans_cluster',
+                                 col_wrap=3)
+
+            grid.map_dataframe(sns.barplot, x='event', y='occurence')
+            plt.title('Event Conversion Rates')
+            plt.ylabel('Conversion Rate')
+            plt.xlabel('Event')
+            plt.show()
+
+        else:
+            # Creating plots
+            sns.set_theme()
+            sns.barplot(x='event',
+                        y='occurence',
+                        data=self.processor.long_event_df[row_mask])
+            plt.title('Event Conversion Rates')
+            plt.ylabel('Conversion Rate')
+            plt.xlabel('Event')
+            plt.show()
 
     # Method for plotting conversion over time
     def plot_conversion_rates_over_time(self, remove_pageview=False) -> None:
