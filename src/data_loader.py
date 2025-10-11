@@ -116,6 +116,24 @@ def ecommerce_loader_test(return_dict=False):
         device.category,
         device.mobile_brand_name,
         device.operating_system
+    FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210129`,
+        UNNEST(event_params) AS events
+    WHERE events.key = 'ga_session_id'
+    UNION ALL
+    SELECT DISTINCT user_pseudo_id,
+        events.value.int_value AS session,
+        device.category,
+        device.mobile_brand_name,
+        device.operating_system
+    FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210130`,
+        UNNEST(event_params) AS events
+    WHERE events.key = 'ga_session_id'
+    UNION ALL
+    SELECT DISTINCT user_pseudo_id,
+        events.value.int_value AS session,
+        device.category,
+        device.mobile_brand_name,
+        device.operating_system
     FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131`,
         UNNEST(event_params) AS events
     WHERE events.key = 'ga_session_id'"""
@@ -129,6 +147,26 @@ def ecommerce_loader_test(return_dict=False):
 
     # Geo SQL statement
     geo_sql = """SELECT DISTINCT user_pseudo_id,
+        events.value.int_value AS session,
+        geo.continent,
+        geo.country,
+        geo.region,
+        geo.city
+    FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210129`,
+        UNNEST(event_params) AS events
+    WHERE events.key = 'ga_session_id'
+    UNION ALL
+    SELECT DISTINCT user_pseudo_id,
+        events.value.int_value AS session,
+        geo.continent,
+        geo.country,
+        geo.region,
+        geo.city
+    FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210130`,
+        UNNEST(event_params) AS events
+    WHERE events.key = 'ga_session_id'
+    UNION ALL
+    SELECT DISTINCT user_pseudo_id,
         events.value.int_value AS session,
         geo.continent,
         geo.country,
