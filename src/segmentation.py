@@ -49,7 +49,9 @@ class customerSegmentation:
         dfs_to_join = [event_for_join, geo_for_join, device_for_join]
 
         self.customer_df = reduce(lambda left, right:
-                                  left.merge(right, on='user_pseudo_id'),
+                                  left.merge(right,
+                                             on='user_pseudo_id',
+                                             how='left'),
                                   dfs_to_join)
 
         logger.info("Successfully prepped customer dataframe")
@@ -117,16 +119,25 @@ class customerSegmentation:
     def add_customer_segments(self):
         '''Method that adds customer segments to specified dataframes'''
 
-        if self._kmeans_created_:
-            self.processor.long_event_df = pd.merge(
-                    self.processor.long_event_df.copy(),
-                    self.customer_df.loc[:, ['user_pseudo_id',
-                                             'kmeans_cluster']],
-                    on='user_pseudo_id',
-                    how='left')
-            logger.info("Added segments to long events table")
-        else:
+        # Checking the k-means workflow has been completed
+        if not self._kmeans_created_:
             raise Exception('K-Means workflow must be completed first')
+
+        # Dropping the existing k-means column if it's in the dataframe
+        if 'kmeans_cluster' in self.processor.long_event_df.columns:
+            self.processor.long_event_df.drop(column='kmeans_cluster')
+            logger.info('Dropping exiting kmeans column')
+
+        # Adding the k-means column to long events
+        self.processor.long_event_df = pd.merge(
+            self.processor.long_event_df.copy(),
+            self.customer_df.loc[:, ['user_pseudo_id',
+                                     'kmeans_cluster']],
+            on='user_pseudo_id',
+            how='left')
+
+        self.processor.created_segments = True
+        logger.info("Added segments to long events table")
 
 
 if __name__ == "__main__":
