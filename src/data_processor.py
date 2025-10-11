@@ -22,9 +22,19 @@ class ecommerceProcessor:
     # Method for running the queries and storing the results
     def run_queries(self, test_=True) -> None:
         if test_:
-            self.event_df, self.session_df, self.device_df, self.geo_df = ecommerce_loader_test()
+            (
+                self.event_df,
+                self.session_df,
+                self.device_df,
+                self.geo_df
+            ) = ecommerce_loader_test()
         else:
-            self.event_df, self.session_df, self.device_df, self.geo_df = ecommerce_loader_prod()
+            (
+                self.event_df,
+                self.session_df,
+                self.device_df,
+                self.geo_df
+            ) = ecommerce_loader_prod()
 
     # Method to pivot the event data from wide to long
     def prep_events(self, rename=True) -> None:
@@ -91,6 +101,7 @@ class ecommerceProcessor:
             .groupby(['first_event_date', 'event']).sum().reset_index()
 
         logger.info("Aggregated events")
+
 
 if __name__ == "__main__":
     processor = ecommerceProcessor()
