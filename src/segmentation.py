@@ -115,7 +115,7 @@ class customerSegmentation:
 
         self._kmeans_created_ = True
 
-    # Method for adding clusters to the customer dataframe
+    # Method for adding clusters to the long events dataframe
     def add_customer_segments(self):
         '''Method that adds customer segments to specified dataframes'''
 
@@ -125,7 +125,7 @@ class customerSegmentation:
 
         # Dropping the existing k-means column if it's in the dataframe
         if 'kmeans_cluster' in self.processor.long_event_df.columns:
-            self.processor.long_event_df.drop(column='kmeans_cluster')
+            self.processor.long_event_df.drop(columns='kmeans_cluster')
             logger.info('Dropping exiting kmeans column')
 
         # Adding the k-means column to long events

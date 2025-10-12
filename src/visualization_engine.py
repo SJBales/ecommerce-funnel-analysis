@@ -22,7 +22,8 @@ class ecommerceViz:
     # Method to plot conversion rates
     def plot_conversion_rate(self,
                              remove_pageview=False,
-                             plot_segments=False) -> None:
+                             plot_segments=False,
+                             col_wrap=5) -> None:
 
         # Calling the helper method for removing the pageview event
         row_mask = self.remove_pageview_(self.processor.long_event_df,
@@ -35,12 +36,16 @@ class ecommerceViz:
 
             grid = sns.FacetGrid(data=self.processor.long_event_df[row_mask],
                                  col='kmeans_cluster',
-                                 col_wrap=3)
+                                 col_wrap=col_wrap,
+                                 palette='tab10')
 
-            grid.map_dataframe(sns.barplot, x='event', y='occurence')
-            plt.title('Event Conversion Rates')
-            plt.ylabel('Conversion Rate')
-            plt.xlabel('Event')
+            grid.map_dataframe(sns.barplot,
+                               x='event',
+                               y='occurence',
+                               hue='event')
+            grid.set_axis_labels('Event', 'Conversion Rate')
+            grid.set_xticklabels(labels=None)
+            grid.add_legend()
             plt.show()
 
         else:
