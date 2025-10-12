@@ -32,7 +32,7 @@ High-level understanding of customer conversion:
 ## Next Steps
 - Expand unit tests to other classes and methods
 - Test data quality of junk sessions (i.e. that lasted very short time, likely less than 5 seconds)
-- Refine existing plots
+- Add functionality to explain customer segments
 
 # Technical Approach
 
