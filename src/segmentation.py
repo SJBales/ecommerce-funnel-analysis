@@ -12,11 +12,14 @@ logger = logging.getLogger(__name__)
 class customerSegmentation:
     '''Class for segmenting ecommerce customers'''
 
-    def __init__(self, processor):
+    def __init__(self, processor, n_centers_=10):
         self.processor = processor
         self.customer_df = None
         self.cluster_df = None
         self._kmeans_created_ = False
+        self.n_centers_ = n_centers_
+        self.k_means = None
+        self.heatmap_df = None
 
     def prep_segment_data(self) -> None:
         '''Creates dataframe for segmentation'''
@@ -70,47 +73,45 @@ class customerSegmentation:
 
     # Prepating data for clustering
     def prep_clustering_data(self, cols=['user_pseudo_id',
-                                         'first_event_date',
+                                         'continent',
                                          'country',
-                                         'region']):
+                                         'category',
+                                         'week']):
         '''Method for preparing data for clustering to id segments'''
 
         if self.customer_df is None:
             self.prep_segment_data()
             logger.info('No customer DF, prepping for clustering')
 
+        # Selecting columns with error handling
+        if 'week' not in self.customer_df.columns:
+            self.get_time_cohorts()
+
         clust_backbone = self.customer_df.loc[:, cols]
 
         # Only selecting countries that appear a fixed number of times
-        country_counts = clust_backbone['country'].value_counts()
-        clust_backbone['country_map'] = clust_backbone['country']\
-            .apply(lambda x: x if country_counts[x] > 50 else 'other')
+        country_frac = clust_backbone['country']\
+            .value_counts() / clust_backbone['country'].count()
 
-        # Only selecting regions that appear a fixed number of times
-        region_counts = clust_backbone['region'].value_counts()
-        clust_backbone['region_map'] = clust_backbone['region']\
-            .apply(lambda x: x if region_counts[x] > 50 else 'other')
+        clust_backbone['country'] = clust_backbone['country']\
+            .apply(lambda x: x if country_frac[x] > 0.05 else 'other')
 
         # Selecting final columns and creating dummies
-        selected_cluster = clust_backbone.loc[:, ['user_pseudo_id',
-                                                  'first_event_date',
-                                                  'country_map',
-                                                  'region_map']]\
-            .set_index('user_pseudo_id')
+        selected_cluster = clust_backbone.set_index('user_pseudo_id')
 
         self.cluster_df = pd.get_dummies(selected_cluster,
                                          dtype=int,
-                                         columns=['first_event_date',
-                                                  'country_map',
-                                                  'region_map'])
+                                         columns=['continent',
+                                                  'country',
+                                                  'category'])
         logger.info('Successfully prepped segmentation data')
 
     # K-Means clustering
-    def create_kmeans(self, centers=10):
+    def create_kmeans(self):
         '''Method to identify customer segments using kmeans clustering'''
 
-        k_means = KMeans(n_clusters=centers)
-        self.customer_df['kmeans_cluster'] = k_means\
+        self.k_means = KMeans(n_clusters=self.n_centers_)
+        self.customer_df['kmeans_cluster'] = self.k_means\
             .fit_predict(self.cluster_df)
 
         self._kmeans_created_ = True
@@ -138,6 +139,18 @@ class customerSegmentation:
 
         self.processor.created_segments = True
         logger.info("Added segments to long events table")
+
+    # Method to describe the segments created from k-means
+    def describe_segments(self):
+        means = self.cluster_df.mean()
+
+        centroid_df = pd.DataFrame(self.k_means.cluster_centers_,
+                                   columns=self.cluster_df.columns)
+        cluster_diff_df = centroid_df.apply(lambda x: x - means, axis=1)
+        cluster_diff_df['center'] = [i for i in range(0, self.n_centers_)]
+
+        # Adding the heatmap df as an attribute
+        self.heatmap_df = cluster_diff_df.set_index('center').T
 
 
 if __name__ == "__main__":
