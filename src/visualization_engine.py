@@ -111,3 +111,13 @@ class ecommerceViz:
         plt.ylabel('Conversion Rate')
         plt.xlabel('Event')
         plt.show()
+
+    '''Section for segments plots'''
+    def plot_segment_heatmap(self, heatmap_df):
+        '''Method for plotting the segments heatmap to describe segments'''
+
+        sns.set_theme()
+        sns.heatmap(heatmap_df,
+                    cmap='coolwarm')
+        plt.title('Segments Heatmap')
+        plt.show()
