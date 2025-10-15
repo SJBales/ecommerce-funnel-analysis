@@ -37,15 +37,16 @@ class ecommerceViz:
             grid = sns.FacetGrid(data=self.processor.long_event_df[row_mask],
                                  col='kmeans_cluster',
                                  col_wrap=col_wrap,
-                                 palette='tab10')
+                                 hue='event',
+                                 palette='Greens')
 
             grid.map_dataframe(sns.barplot,
                                x='event',
-                               y='occurence',
-                               hue='event')
+                               y='occurence')
             grid.set_axis_labels('Event', 'Conversion Rate')
             grid.set_xticklabels(labels=None)
-            grid.add_legend()
+            grid.add_legend(title='Segment')
+            plt.title('Customer Segment Conversion Rates')
             plt.show()
 
         else:
@@ -119,5 +120,6 @@ class ecommerceViz:
         sns.set_theme()
         sns.heatmap(heatmap_df,
                     cmap='coolwarm')
-        plt.title('Segments Heatmap')
+        plt.title('Relatieve Importance of K-Means Features for Segments')
+        plt.xlabel('Customer Segment')
         plt.show()
