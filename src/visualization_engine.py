@@ -54,7 +54,9 @@ class ecommerceViz:
             sns.set_theme()
             sns.barplot(x='event',
                         y='occurence',
-                        data=self.processor.long_event_df[row_mask])
+                        data=self.processor.long_event_df[row_mask],
+                        hue='event',
+                        palette='Greens')
             plt.title('Event Conversion Rates')
             plt.ylabel('Conversion Rate')
             plt.xlabel('Event')
@@ -107,7 +109,8 @@ class ecommerceViz:
         sns.set_them()
         sns.barplot(x='event',
                     y='occurence',
-                    data=self.processor.long_session_df[row_mask])
+                    data=self.processor.long_session_df[row_mask],
+                    palette='Greens')
         plt.title('Session Conversion Rates')
         plt.ylabel('Conversion Rate')
         plt.xlabel('Event')
@@ -120,6 +123,6 @@ class ecommerceViz:
         sns.set_theme()
         sns.heatmap(heatmap_df,
                     cmap='coolwarm')
-        plt.title('Relatieve Importance of K-Means Features for Segments')
+        plt.title('Relative Importance of K-Means Features for Segments')
         plt.xlabel('Customer Segment')
         plt.show()

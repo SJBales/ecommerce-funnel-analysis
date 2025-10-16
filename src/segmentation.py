@@ -126,8 +126,9 @@ class customerSegmentation:
 
         # Dropping the existing k-means column if it's in the dataframe
         if 'kmeans_cluster' in self.processor.long_event_df.columns:
-            self.processor.long_event_df.drop(columns='kmeans_cluster')
-            logger.info('Dropping exiting kmeans column')
+            self.processor.long_event_df.drop(columns='kmeans_cluster',
+                                              inplace=True)
+            logger.info('Dropping existing kmeans column')
 
         # Adding the k-means column to long events
         self.processor.long_event_df = pd.merge(
