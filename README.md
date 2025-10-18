@@ -33,7 +33,6 @@ High-level understanding of customer conversion:
 - Expand unit tests to other classes and methods
 - Test data quality of junk sessions (i.e. that lasted very short time, likely less than 5 seconds)
 - Polish Report
-- Convert event dates in plot to date types
 
 # Technical Approach
 
