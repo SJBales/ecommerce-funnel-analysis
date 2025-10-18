@@ -62,6 +62,41 @@ class ecommerceViz:
             plt.xlabel('Event')
             plt.show()
 
+    def create_conversion_table(self):
+        '''Creates a segment conversion table'''
+
+        if self.processor._created_segments is False:
+            ValueError('Kmeans Segments Not Created')
+
+        return self.processor.long_event_df.loc[:, ['kmeans_cluster',
+                                                    'event',
+                                                    'occurence']]\
+            .pivot_table(index='kmeans_cluster',
+                         columns='event',
+                         values='occurence',
+                         aggfunc='mean')\
+            .round(3)
+
+    def create_segment_conversion_heatmap(self,
+                                          remove_pageview=False) -> None:
+        '''Creates a heatmap for segment conversion rates'''
+
+        # Calling the helper method for removing the pageview event
+        if remove_pageview:
+            row_mask = self.processor\
+                .heatmap_conversion_df.index.values != 'Viewed Page'
+        else:
+            row_mask = np.array([True] * self.processor
+                                .heatmap_conversion_df.shape[0])
+
+        # Creating the heatmap
+        sns.set_theme()
+        sns.heatmap(self.processor.heatmap_conversion_df[row_mask],
+                    annot=True,
+                    cmap='coolwarm')
+        plt.title("Customer Segment Conversion Heatmap")
+        plt.show()
+
     # Method for plotting conversion over time
     def plot_conversion_rates_over_time(self, remove_pageview=False) -> None:
 
@@ -69,7 +104,7 @@ class ecommerceViz:
         row_mask = self.remove_pageview_(self.processor.long_event_df,
                                          remove_pageview)
 
-        # Using the helper method
+        # Adding the code for creating the plots
         sns.set_theme()
         sns.lineplot(data=self.processor.long_event_df[row_mask],
                      x='first_event_date',
