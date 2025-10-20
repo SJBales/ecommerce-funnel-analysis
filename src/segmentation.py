@@ -22,7 +22,15 @@ class customerSegmentation:
         self.heatmap_df = None
 
     def prep_segment_data(self) -> None:
-        '''Creates dataframe for segmentation'''
+        '''
+        Creates dataframe to work from to segment customers
+
+        Args
+            None
+
+        Returns
+            None
+        '''
 
         # Ensuring the processsor has data
         if self.processor.event_df is None:
@@ -60,8 +68,16 @@ class customerSegmentation:
         logger.info("Successfully prepped customer dataframe")
 
     # Getting time-based cohorts
-    def get_time_cohorts(self):
-        '''Preps data and does conversions needed for time cohorts'''
+    def get_time_cohorts(self) -> None:
+        '''
+        Preps data and does conversions needed for time cohorts.
+
+        Args
+            None
+
+        Returns
+            None
+        '''
 
         self.customer_df['first_event_date'] = pd.to_datetime(
             self.customer_df['first_event_date'])
@@ -76,8 +92,18 @@ class customerSegmentation:
                                          'continent',
                                          'country',
                                          'category',
-                                         'week']):
-        '''Method for preparing data for clustering to id segments'''
+                                         'week']) -> None:
+
+        '''
+        Method for preparing data for clustering to id segments
+
+        Args
+            cols: list of strings of columns to use in k-means
+            clustering to identify customer segments
+
+        Returns
+            None
+        '''
 
         if self.customer_df is None:
             self.prep_segment_data()
@@ -107,8 +133,16 @@ class customerSegmentation:
         logger.info('Successfully prepped segmentation data')
 
     # K-Means clustering
-    def create_kmeans(self):
-        '''Method to identify customer segments using kmeans clustering'''
+    def create_kmeans(self) -> None:
+        '''
+        Method to identify customer segments using kmeans clustering
+
+        Args
+            None
+
+        Returns
+            None
+        '''
 
         self.k_means = KMeans(n_clusters=self.n_centers_)
         self.customer_df['kmeans_cluster'] = self.k_means\
@@ -117,8 +151,16 @@ class customerSegmentation:
         self._kmeans_created_ = True
 
     # Method for adding clusters to the long events dataframe
-    def add_customer_segments(self):
-        '''Method that adds customer segments to specified dataframes'''
+    def add_customer_segments(self) -> None:
+        '''
+        Method that adds customer segments from kmeans to specified dataframes
+
+        Args
+            None
+
+        Returns
+            None
+        '''
 
         # Checking the k-means workflow has been completed
         if not self._kmeans_created_:
@@ -143,10 +185,24 @@ class customerSegmentation:
 
     # Method to describe the segments created from k-means
     def describe_segments(self):
+        '''
+        Method to describe the segments created from k-means clustering
+
+        Args
+            None
+
+        Returns
+            None
+        '''
+
+        # Caculating the means of each fetaure in creating the clusters
         means = self.cluster_df.mean()
 
+        # Creating a datafrmae of the centroids of each cluster
         centroid_df = pd.DataFrame(self.k_means.cluster_centers_,
                                    columns=self.cluster_df.columns)
+
+        # Taking the difference of each centroid versus the mean
         cluster_diff_df = centroid_df.apply(lambda x: x - means, axis=1)
         cluster_diff_df['center'] = [i for i in range(0, self.n_centers_)]
 

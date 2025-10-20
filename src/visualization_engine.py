@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -7,7 +8,9 @@ class ecommerceViz:
     def __init__(self, processor):
         self.processor = processor
 
-    '''Section for helper functions'''
+    '''
+    -------------Section for helper functions-------------
+    '''
     # Helper function for removing the pageview event
     def remove_pageview_(self, df, remove_pageview=False) -> np.array:
 
@@ -18,12 +21,30 @@ class ecommerceViz:
 
         return mask
 
-    '''Section for overall event conversion'''
+    '''
+    -------------Section for overall event conversion-------------
+    '''
     # Method to plot conversion rates
     def plot_conversion_rate(self,
                              remove_pageview=False,
                              plot_segments=False,
                              col_wrap=5) -> None:
+        '''
+        Plots overall event conversion rates in bar charts.
+
+        Args
+            remove_pageview: boolean to remove the pageview step from
+            the visualization to not overly expand the y-axis
+
+            plot_segments: boolean, default = False. option to plot
+            conversion rates by customer segment from kmeans
+
+            col_wrap: int, default = 5. Number of columns to wrap if
+            plotting customer segments
+
+        Returns
+            None
+        '''
 
         # Calling the helper method for removing the pageview event
         row_mask = self.remove_pageview_(self.processor.long_event_df,
@@ -31,6 +52,8 @@ class ecommerceViz:
 
         # Adding logic for dynamic plotting of customer segments
         if plot_segments:
+
+            # Ensuring segments have been created before executing the workflow
             if not self.processor.created_segments:
                 raise ValueError("No segments in long dataframe")
 
@@ -62,9 +85,18 @@ class ecommerceViz:
             plt.xlabel('Event')
             plt.show()
 
-    def create_conversion_table(self):
-        '''Creates a segment conversion table'''
+    def create_conversion_table(self) -> pd.DataFrame:
+        '''
+        Creates a segment conversion table to display in the final report.
 
+        Args
+            None
+
+        Returns
+            Pandas dataframe
+        '''
+
+        # Method to ensure segments have been created before attempting to plot
         if self.processor._created_segments is False:
             ValueError('Kmeans Segments Not Created')
 
@@ -79,7 +111,16 @@ class ecommerceViz:
 
     def create_segment_conversion_heatmap(self,
                                           remove_pageview=False) -> None:
-        '''Creates a heatmap for segment conversion rates'''
+        '''
+        Creates a heatmap for segment conversion rates
+
+        Args
+            remove_pageview: boolean, default = False. Removes the pageview
+            step from the visualization to not overly expand the y-axis
+
+        Returns
+            None
+        '''
 
         # Calling the helper method for removing the pageview event
         if remove_pageview:
@@ -99,6 +140,16 @@ class ecommerceViz:
 
     # Method for plotting conversion over time
     def plot_conversion_rates_over_time(self, remove_pageview=False) -> None:
+        '''
+        Plots customer conversion rates over time
+
+        Args
+            remove_pageview: boolean, default = False. Removes the pageview
+            step from the visualization to not overly expand the y-axis
+
+        Returns
+            None
+        '''
 
         # Calling the helper method for removing the pageview event
         row_mask = self.remove_pageview_(self.processor.long_event_df,
@@ -117,6 +168,16 @@ class ecommerceViz:
 
     # Method to plot aggregate conversion rates over time
     def plot_conversion_events_over_time(self, remove_pageview=False) -> None:
+        '''
+        Plots total conversion events over time
+
+        Args
+            remove_pageview: boolean, default = False. Removes the pageview
+            step from the visualization to not overly expand the y-axis
+
+        Returns
+            None, generates chart
+        '''
 
         # Calling the helper method for removing the pageview event
         row_mask = self.remove_pageview_(self.processor.agg_long_event_df,
@@ -132,7 +193,9 @@ class ecommerceViz:
         plt.xlabel('Event Date')
         plt.show()
 
-    '''Section for session conversion plots'''
+    '''
+    -----------Section for session conversion plots-----------
+    '''
     # Method to plot session conversion
     def plot_session_conversion_rate(self, remove_pageview=False):
 
@@ -151,7 +214,9 @@ class ecommerceViz:
         plt.xlabel('Event')
         plt.show()
 
-    '''Section for segments plots'''
+    '''
+    -----------Section for segments plots-----------
+    '''
     def plot_segment_heatmap(self, heatmap_df):
         '''Method for plotting the segments heatmap to describe segments'''
 
