@@ -15,23 +15,9 @@ Business Objective: identify steps in the ecommerce funnel for the product teams
 - A large spike in traffic in the December timeframe suggests a sales strategy. For product specifically, it appears conversion rates in key steps dropping during this time. It's likely the new traffic was net-new users of the sites, and the drops in user conversion may suggest new users struggle with navigating the site
 - There is a data anomaly for the first few weeks of the collection period where total page views is less than total purchases. This warrants follow up with the team that implemented the tracking for more background on the collection process
 
-# Analysis Plan (To be deleted later)
-
-## Planned Analyses
-High-level understanding of customer conversion:
- 1. Aggregate conversion rate across all customers and time
- 2. Conversion rates over time (daily trends) + time based cohort analysis
- 3. Conversion rates for geographic segments
- 4. Conversion rates for device segments
- 5. Session conversion. Key questions:
-    a. How often do customers convert in the first session?
-    b. How quickly do customers convert in a given session?
-    c. How long does each step typically take?
-    d. Does the length of a session affect conversion rates?
-
-## Next Steps
+## Plans for Future Extensions
 - Expand unit tests to other classes and methods
-- Test data quality of junk sessions (i.e. that lasted very short time, likely less than 5 seconds)
+- Session Conversion Rates
 
 # Technical Approach
 
